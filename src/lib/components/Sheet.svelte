@@ -4,8 +4,8 @@
 
     let sheetContext = getSheetContext();
 
-    const MIN_COLS = 10;
-    const MIN_ROWS = 10;
+    const MIN_COLS = 20;
+    const MIN_ROWS = 30;
 
     let rowsCount = $derived(
         sheetContext.cells.length > MIN_ROWS
