@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getSheetContext, isCellEmpty } from '$lib/SheetContext.svelte';
+    import { getSheetContext } from '$lib/SheetContext.svelte';
     import { numberToAlphabet } from '$lib/utils';
 
     type Props = {
