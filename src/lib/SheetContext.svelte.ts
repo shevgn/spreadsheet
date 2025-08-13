@@ -1,8 +1,10 @@
 import { getContext, setContext } from 'svelte';
 import type { Cell } from './types';
+import { browser } from '$app/environment';
 
 class SheetContext {
     cells: Cell[][] = $state([]);
+    localStorageKey = 'sheet-cells';
 
     constructor(cells: Cell[][]) {
         this.cells = cells;
@@ -10,6 +12,8 @@ class SheetContext {
 
     addRow() {
         this.cells.push([]);
+
+        this.saveToLocalStorage();
     }
 
     addColumn() {
@@ -20,6 +24,8 @@ class SheetContext {
                 color: ''
             });
         });
+
+        this.saveToLocalStorage();
     }
 
     addCell(row: number, col: number) {
@@ -32,10 +38,14 @@ class SheetContext {
             bgColor: '',
             color: ''
         };
+
+        this.saveToLocalStorage();
     }
 
     updateCell(row: number, col: number, cell: Cell) {
         this.cells[row][col] = cell;
+
+        this.saveToLocalStorage();
     }
 
     safeCell(row: number, col: number) {
@@ -45,12 +55,28 @@ class SheetContext {
 
         return this.cells[row][col];
     }
+
+    saveToLocalStorage() {
+        localStorage.setItem(this.localStorageKey, JSON.stringify(this.cells));
+    }
+
+    loadFromLocalStorage() {
+        const storedCells = localStorage.getItem(this.localStorageKey);
+
+        if (storedCells) {
+            this.cells = JSON.parse(storedCells) as Cell[][];
+        }
+    }
 }
 
 const SheetContextKey = Symbol('SheetContext');
 
 export function createSheetContext(cells?: Cell[][]) {
-    return setContext(SheetContextKey, new SheetContext(cells || []));
+    const sheetContext = new SheetContext(cells ?? []);
+    if (browser) {
+        sheetContext.loadFromLocalStorage();
+    }
+    return setContext(SheetContextKey, sheetContext);
 }
 
 export function getSheetContext() {
