@@ -5,9 +5,21 @@
     type Props = {
         col: number;
         row: number;
+        width?: number;
+        height?: number;
     };
 
-    let { col, row }: Props = $props();
+    let { col, row, width, height }: Props = $props();
+
+    const DEFAULT_WIDTH = 80;
+    const DEFAULT_HEIGHT = 40;
+
+    if (!width) {
+        width = DEFAULT_WIDTH;
+    }
+    if (!height) {
+        height = DEFAULT_HEIGHT;
+    }
 
     let sheetContext = getSheetContext();
 
@@ -19,11 +31,17 @@
     const focusOnMount = (element: HTMLInputElement) => {
         element.focus();
     };
+
+    let isHeader = $derived(col == 0 || row == 0);
 </script>
 
 <svelte:element
-    this={col === 0 || row === 0 ? 'th' : 'td'}
-    class="min-h-8 min-w-8 border"
+    this={isHeader ? 'th' : 'td'}
+    class="border"
+    style={`width: ${width}px; 
+            height: ${height}px; 
+            background-color: ${isHeader ? '#f7f7f7' : '#ffffff'}
+    `}
 >
     <div class="flex h-full items-center justify-center">
         {#if isAlphabetHeader}
