@@ -68,7 +68,7 @@
             <h1 class="text-3xl font-bold">Spreadsheet</h1>
         </div>
     </header>
-    <main class="flex flex-1 items-center justify-center p-4">
+    <main class="flex flex-1 items-center justify-center">
         {@render children()}
     </main>
     <footer class="flex min-h-14 items-center justify-between">
