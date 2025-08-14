@@ -14,21 +14,30 @@
     );
     let maxCols = $derived.by(() => {
         return sheetContext.cells.reduce(
-            (acc, row) => Math.max(acc, row.length, MIN_COLS),
+            (acc, row) => Math.max(acc, row?.length ?? MIN_ROWS, MIN_COLS),
             0
         );
     });
+
+    let selectedCell = $state<{ row: number; col: number } | null>(null);
+
+    const selectCell = (row: number, col: number) => {
+        selectedCell = { row, col };
+    };
 </script>
 
-<div class="h-[80vh] w-full overflow-scroll">
+<div class="h-full w-full max-w-screen overflow-scroll">
     <table class="h-full w-full table-fixed">
         <tbody class="h-full w-full">
             {#each { length: rowsCount + 1 }, row (row)}
-                <tr class="w-full">
+                <tr class="h-full w-full">
                     {#each { length: maxCols + 1 }, col (col)}
                         <SheetCell
                             {col}
                             {row}
+                            selected={selectedCell?.row === row &&
+                                selectedCell?.col === col}
+                            {selectCell}
                         />
                     {/each}
                 </tr>
