@@ -7,19 +7,15 @@
         row: number;
         selected?: boolean;
         selectCell: (row: number, col: number) => void;
-        width?: number;
-        height?: number;
     };
 
-    let { col, row, selected, selectCell, width, height }: Props = $props();
+    let { col, row, selected, selectCell }: Props = $props();
 
-    const DEFAULT_WIDTH = 80;
     const DEFAULT_HEIGHT = 30;
 
-    if (!width) width = DEFAULT_WIDTH;
-    if (!height) height = DEFAULT_HEIGHT;
-
     let sheetContext = getSheetContext();
+
+    let width = $derived(sheetContext.getColumnWidth(col - 1));
 
     let isAlphabetHeader = $state(col > 0 && row === 0);
     let isNumberHeader = $state(col === 0 && row > 0);
@@ -30,18 +26,48 @@
     const focusOnMount = (element: HTMLInputElement) => {
         element.focus();
     };
+
+    const startResize = (e: MouseEvent) => {
+        e.preventDefault();
+        isResizing = true;
+        const startX = e.clientX;
+        const startWidth = width;
+
+        const doResize = (moveEvent: MouseEvent) => {
+            if (!isResizing) return;
+            const newWidth = Math.max(
+                50,
+                startWidth + (moveEvent.clientX - startX)
+            ); // Minimum width of 50px
+
+            sheetContext.setColumnWidth(col - 1, newWidth);
+            const cellElement = document.getElementById(`cell-${row}-${col}`);
+            if (cellElement) {
+                cellElement.style.width = `${newWidth}px`;
+            }
+        };
+
+        const stopResize = () => {
+            isResizing = false;
+            window.removeEventListener('mousemove', doResize);
+            window.removeEventListener('mouseup', stopResize);
+        };
+
+        window.addEventListener('mousemove', doResize);
+        window.addEventListener('mouseup', stopResize);
+    };
 </script>
 
 <svelte:element
     this={isHeader ? 'th' : 'td'}
+    id={`cell-${row}-${col}`}
     role="cell"
     tabindex="0"
     class={[
-        'relative text-sm',
-        !isHeader && !selected && 'border-[0.5px]',
-        selected && 'border-blue-500'
+        'relative border text-sm',
+        !isHeader ? 'border-zinc-300' : 'border-zinc-800',
+        selected && '!border-blue-500'
     ]}
-    class:border={isHeader}
     class:border-2={selected}
     onclick={() => {
         if (row === 0 && col === 0) {
@@ -52,7 +78,7 @@
     ondblclick={() => {
         isEditing = true;
     }}
-    style={`width: ${width}px;height: ${height}px;background-color: ${isHeader ? '#f7f7f7' : '#ffffff'}`}
+    style={`width: ${width}px; height: ${DEFAULT_HEIGHT}px; background-color: ${isHeader ? '#f7f7f7' : '#ffffff'}`}
 >
     {#if isAlphabetHeader}
         <div
@@ -61,6 +87,7 @@
             aria-valuenow={width}
             tabindex="0"
             class="absolute top-0 bottom-0 left-0 w-1 cursor-col-resize hover:bg-green-400"
+            onmousedown={startResize}
         ></div>
         <div
             id={'cell-' + row + '-' + col + '-resize-right-handle'}
@@ -68,6 +95,7 @@
             aria-valuenow={width}
             tabindex="0"
             class="absolute top-0 right-0 bottom-0 w-1 cursor-col-resize hover:bg-green-400"
+            onmousedown={startResize}
         ></div>
     {/if}
     <div class="flex h-full w-full items-center justify-center">

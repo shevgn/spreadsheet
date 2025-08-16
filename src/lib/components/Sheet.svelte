@@ -4,7 +4,7 @@
 
     let sheetContext = getSheetContext();
 
-    const MIN_COLS = 20;
+    const MIN_COLS = 26;
     const MIN_ROWS = 30;
 
     let rowsCount = $derived(
@@ -14,7 +14,7 @@
     );
     let maxCols = $derived.by(() => {
         return sheetContext.cells.reduce(
-            (acc, row) => Math.max(acc, row?.length ?? MIN_ROWS, MIN_COLS),
+            (acc, row) => Math.max(acc, row?.length ?? MIN_COLS, MIN_COLS),
             0
         );
     });
@@ -27,7 +27,7 @@
 </script>
 
 <div class="h-full w-full max-w-screen overflow-scroll">
-    <table class="h-full w-full table-fixed">
+    <table class="h-full w-full table-fixed border-collapse">
         <tbody class="h-full w-full">
             {#each { length: rowsCount + 1 }, row (row)}
                 <tr class="h-full w-full">
