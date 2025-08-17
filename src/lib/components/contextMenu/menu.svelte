@@ -128,11 +128,11 @@
         if (!active) return;
 
         if (!menuEl.contains(active)) {
-            setTimeout(() => {
+            tick().then(() => {
                 if (!menuEl) return;
                 if (!isOpen()) return;
                 focusFirstItem();
-            }, 0);
+            });
         }
     }
 
