@@ -1,32 +1,35 @@
 import { getContext, setContext } from 'svelte';
 
-type Position = {
+type Pos = {
     x: number;
     y: number;
 };
 
 class ContextMenuContext {
-    private opened = $state(false);
-    private position = $state<Position>({ x: 0, y: 0 });
+    private openId = $state<string | null>(null);
+    private position = $state<Pos>({ x: 0, y: 0 });
 
     constructor() {}
+
+    open(id: string, pos: Pos) {
+        this.openId = id;
+        this.position = pos;
+    }
+
+    close() {
+        this.openId = null;
+    }
+
+    isOpen(id: string) {
+        return this.openId === id;
+    }
 
     getPosition() {
         return this.position;
     }
 
-    getOpened() {
-        return this.opened;
-    }
-
-    open(position: Position) {
-        this.opened = true;
-        this.position = position;
-    }
-
-    close() {
-        this.opened = false;
-        this.position = undefined;
+    getOpenId() {
+        return this.openId;
     }
 }
 

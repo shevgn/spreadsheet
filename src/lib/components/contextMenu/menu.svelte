@@ -2,42 +2,46 @@
     import { browser } from '$app/environment';
     import { clamp } from '$lib/utils';
     import { onMount, onDestroy, type Snippet } from 'svelte';
+    import { contextMenuContext, ContextMenuItem } from '.';
 
     type Props = {
         trigger: Snippet;
         content?: Snippet;
+        id?: string;
         offset?: number;
     };
 
-    let { trigger, content, offset = $bindable(4) }: Props = $props();
+    let {
+        trigger,
+        content,
+        id = $bindable(crypto.randomUUID()),
+        offset = $bindable(4)
+    }: Props = $props();
 
-    let open = $state(false);
-    let x = $state(0);
-    let y = $state(0);
-
+    let context = contextMenuContext.get();
     let menuEl = $state<HTMLElement | null>(null);
+    let isOpen = $derived(() => context?.getOpenId() === id);
 
     function openAt(clientX: number, clientY: number) {
-        x = clientX;
-        y = clientY;
-        open = true;
-    }
-
-    function close() {
-        open = false;
+        context.open(id, {
+            x: clientX,
+            y: clientY
+        });
     }
 
     function onContext(e: MouseEvent) {
         e.preventDefault();
         // якщо хочемо — можемо також e.stopPropagation();
         openAt(e.clientX, e.clientY);
-        setTimeout(() => reposition(), 0);
+        requestAnimationFrame(() => reposition());
     }
 
     function reposition() {
         if (!menuEl) return;
         const rect = menuEl.getBoundingClientRect();
         const { innerWidth, innerHeight } = window;
+        const x = context.getPosition().x;
+        const y = context.getPosition().y;
         const gap = offset;
 
         // reset styles
@@ -76,12 +80,12 @@
 
     function onDocClick(e: MouseEvent) {
         if (!menuEl) return;
-        if (!menuEl.contains(e.target as Node)) close();
+        if (!menuEl.contains(e.target as Node)) context.close();
     }
 
     function onKeydown(e: KeyboardEvent) {
         if (e.key === 'Escape') {
-            close();
+            context.close();
         }
     }
 
@@ -98,6 +102,10 @@
         document.removeEventListener('keydown', onKeydown);
         window.removeEventListener('resize', reposition);
     });
+
+    $effect(() => {
+        if (isOpen()) requestAnimationFrame(() => reposition());
+    });
 </script>
 
 <div
@@ -109,7 +117,7 @@
     {@render trigger()}
 </div>
 
-{#if open}
+{#if isOpen()}
     <ul
         bind:this={menuEl}
         class="z-50 min-w-[160px] rounded border border-zinc-200 bg-white p-1 text-sm shadow-md"
@@ -117,20 +125,16 @@
         tabindex="-1"
         role="menu"
         aria-label="Context menu"
-        onkeydown={(e) => {}}
+        onkeydown={(e) => {
+            if (e.key === 'Escape') {
+                context.close();
+            }
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+            }
+        }}
     >
         {@render content?.()}
-
-        <li>
-            <button
-                class="w-full rounded px-2 py-1 text-left text-red-600 hover:bg-zinc-100"
-                data-action="close"
-                onclick={() => close()}
-                role="menuitem"
-                tabindex="-1"
-            >
-                <span>Close</span>
-            </button>
-        </li>
     </ul>
 {/if}
