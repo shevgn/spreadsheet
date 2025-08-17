@@ -38,20 +38,40 @@
         if (!menuEl) return;
         const rect = menuEl.getBoundingClientRect();
         const { innerWidth, innerHeight } = window;
+        const gap = offset;
 
-        const maxLeft = Math.max(offset, innerWidth - rect.width - offset);
-        let desiredLeft = x + offset;
-        let left = clamp(desiredLeft, offset, Math.max(offset, maxLeft));
-
+        // reset styles
         menuEl.style.right = '';
-        menuEl.style.left = left + 'px';
-
-        let desiredTop = y - offset;
-        const maxTop = innerHeight - rect.height - offset;
-        let top = clamp(desiredTop, offset, Math.max(offset, maxTop));
-
         menuEl.style.bottom = '';
-        menuEl.style.top = top + 'px';
+
+        const canShowRight = x + gap + rect.width <= innerWidth - gap;
+        const canShowLeft = x - gap - rect.width >= gap;
+
+        let left: number;
+        if (canShowRight) {
+            left = x + gap;
+        } else if (canShowLeft) {
+            left = x - gap - rect.width;
+        } else {
+            left = clamp(
+                x + gap,
+                gap,
+                Math.max(gap, innerWidth - rect.width - gap)
+            );
+        }
+
+        if (rect.width >= innerWidth - gap * 2) {
+            left = gap;
+        }
+
+        menuEl.style.left = Math.round(left) + 'px';
+
+        let desiredTop = y - gap;
+        const minTop = gap;
+        const maxTop = Math.max(gap, innerHeight - rect.height - gap);
+        let top = clamp(desiredTop, minTop, maxTop);
+
+        menuEl.style.top = Math.round(top) + 'px';
     }
 
     function onDocClick(e: MouseEvent) {
