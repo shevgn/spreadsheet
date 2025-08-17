@@ -16,7 +16,6 @@ class ContextMenuContext {
     private offset = $state<number>(CONTEXT_MENU_OFFSET);
 
     private _onDocClick: ((e: MouseEvent) => void) | null = null;
-    private _onKeydown: ((e: KeyboardEvent) => void) | null = null;
     private _onResize: (() => void) | null = null;
     private listenersAttached = $state(false);
 
@@ -79,22 +78,14 @@ class ContextMenuContext {
 
         this.menuEl = menuEl;
         this.offset = offset;
-
-        try {
-            menuEl.focus();
-        } catch /*(e)*/ {
-            // ignore
-        }
     }
 
     setupEventListeners() {
         if (this.listenersAttached) return;
         this._onDocClick = (e: MouseEvent) => this.onDocClick(e);
-        this._onKeydown = (e: KeyboardEvent) => this.onKeydown(e);
         this._onResize = () => this.reposition();
 
         document.addEventListener('click', this._onDocClick);
-        document.addEventListener('keydown', this._onKeydown);
         window.addEventListener('resize', this._onResize);
 
         // window.addEventListener('scroll', this._onResize, { passive: true });
@@ -106,14 +97,11 @@ class ContextMenuContext {
         if (!this.listenersAttached) return;
         if (this._onDocClick)
             document.removeEventListener('click', this._onDocClick);
-        if (this._onKeydown)
-            document.removeEventListener('keydown', this._onKeydown);
         if (this._onResize)
             window.removeEventListener('resize', this._onResize);
 
         // якщо ви додавали scroll, видаліть його теж
         this._onDocClick = null;
-        this._onKeydown = null;
         this._onResize = null;
         this.listenersAttached = false;
     }
@@ -168,12 +156,6 @@ class ContextMenuContext {
     onDocClick(e: MouseEvent) {
         if (!this.menuEl) return;
         if (!this.menuEl.contains(e.target as Node)) {
-            this.close();
-        }
-    }
-
-    onKeydown(e: KeyboardEvent) {
-        if (e.key === 'Escape') {
             this.close();
         }
     }
