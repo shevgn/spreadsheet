@@ -34,8 +34,16 @@ class TabsContext {
         return id === this.selectedTabId;
     }
 
-    removeTab(id: string) {
+    deleteTab(id: string) {
         if (this.tabs.length === 1) return;
+
+        if (this.selectedTabId === id) {
+            if (this.selectedTabId === this.tabs[0].id) {
+                this.selectedTabId = this.tabs[1].id;
+            } else {
+                this.selectedTabId = this.tabs[0].id;
+            }
+        }
 
         this.tabs = this.tabs.filter((tab) => tab.id !== id);
     }
