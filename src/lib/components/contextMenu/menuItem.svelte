@@ -7,7 +7,7 @@
         onClick?: () => void;
     } & HTMLButtonAttributes;
 
-    let { onClick, children, ...rest }: Props = $props();
+    let { onClick, disabled, children, ...rest }: Props = $props();
 
     let context = contextMenuContext.get();
 
@@ -25,7 +25,9 @@
             context.close();
         }}
         role="menuitem"
+        aria-disabled={disabled}
         tabindex="-1"
+        {disabled}
     >
         {@render children?.()}
     </button>
