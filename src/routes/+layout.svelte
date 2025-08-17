@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { createSheetContext } from '$lib/SheetContext.svelte';
-    import type { Cell } from '$lib/types';
-    import { onMount } from 'svelte';
     import '../app.css';
+    import { onMount } from 'svelte';
+    import type { Cell } from '$lib/types';
     import Header from '$lib/components/Header.svelte';
-    import Footer from '$lib/components/Footer.svelte';
+    import { createTabsContext } from '$lib/TabsContext.svelte';
+    import { createSheetContext } from '$lib/SheetContext.svelte';
+    import Footer from '$lib/components/footer/Footer.svelte';
+    import { contextMenuContext } from '$lib/components/contextMenu';
 
     let { children } = $props();
 
@@ -63,6 +65,8 @@
     ]);
 
     createSheetContext(cells);
+    createTabsContext();
+    contextMenuContext.create();
 
     let mainEl = $state<HTMLElement | null>(null);
     let rootHeight = $state(0);
