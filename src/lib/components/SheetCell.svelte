@@ -81,20 +81,20 @@
     style={`width: ${width}px; height: ${DEFAULT_HEIGHT}px; background-color: ${isHeader ? '#f7f7f7' : '#ffffff'}`}
 >
     {#if isAlphabetHeader}
-        <div
+        <!--<div
             id={'cell-' + row + '-' + col + '-resize-left-handle'}
             role="slider"
             aria-valuenow={width}
-            tabindex="0"
+            tabindex="-1"
             class="absolute top-0 bottom-0 left-0 w-1 cursor-col-resize hover:bg-green-400"
             onmousedown={startResize}
-        ></div>
+        ></div>-->
         <div
             id={'cell-' + row + '-' + col + '-resize-right-handle'}
             role="slider"
             aria-valuenow={width}
-            tabindex="0"
-            class="absolute top-0 right-0 bottom-0 w-1 cursor-col-resize hover:bg-green-400"
+            tabindex="-1"
+            class="absolute top-0 right-0 bottom-0 w-2 cursor-col-resize hover:bg-green-400"
             onmousedown={startResize}
         ></div>
     {/if}
