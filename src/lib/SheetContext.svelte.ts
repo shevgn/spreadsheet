@@ -5,9 +5,9 @@ import { browser } from '$app/environment';
 class SheetContext {
     cells: Cell[][] = $state([]);
     columnWidths: number[] = $state([]); // Store column widths
-    localStorageKey = 'sheet-cells';
-    localStorageColumnWidthsKey = 'sheet-column-widths';
-    defaultColumnWidth = 80;
+    private readonly localStorageKey = 'sheet-cells';
+    private readonly localStorageColumnWidthsKey = 'sheet-column-widths';
+    private readonly defaultColumnWidth = 80;
 
     constructor(cells: Cell[][]) {
         this.cells = cells;
