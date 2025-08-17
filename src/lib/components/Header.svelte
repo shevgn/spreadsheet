@@ -65,7 +65,7 @@
 </script>
 
 <header
-    class="flex min-h-14 flex-1 items-center justify-between bg-white px-8 py-2"
+    class="flex min-h-16 flex-1 items-center justify-between bg-white px-8 py-2"
     bind:clientHeight={elHeight}
 >
     <h1 class="sr-only text-xl font-bold">Spreadsheet</h1>
