@@ -3,8 +3,11 @@ import type { Tab } from './types';
 
 class TabsContext {
     private tabs: Tab[] = $state([]);
-    selectedTabId = $state<string>();
+    private selectedTabId = $state<string>();
     private readonly localStorageKey = 'sheet-tabs';
+
+    renamingTabId = $state<string | null>(null);
+    renamingValue = $state('');
 
     constructor() {
         this.addTab();
@@ -52,6 +55,30 @@ class TabsContext {
         this.tabs = this.tabs.map((tab) =>
             tab.id === id ? { ...tab, name } : tab
         );
+    }
+
+    startRename(id: string) {
+        const tab = this.tabs.find((t) => t.id === id);
+        if (!tab) return;
+
+        this.renamingTabId = id;
+        this.renamingValue = tab.name;
+    }
+
+    cancelRename() {
+        this.renamingTabId = null;
+        this.renamingValue = '';
+    }
+
+    commitRename() {
+        const id = this.renamingTabId;
+        if (!id) return;
+
+        const name = (this.renamingValue || '').trim() || 'Untitled';
+        this.updateTab(id, name);
+
+        this.renamingTabId = null;
+        this.renamingValue = '';
     }
 
     saveToLocalStorage() {
