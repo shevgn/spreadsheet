@@ -20,7 +20,6 @@
     <button
         {...rest}
         class="w-full rounded px-2 py-1 text-left not-disabled:hover:bg-zinc-100 disabled:bg-zinc-100"
-        data-action="close"
         onclick={() => {
             onClick?.();
             context.close();
