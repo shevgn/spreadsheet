@@ -3,3 +3,8 @@ export type Cell = {
     bgColor: string;
     color: string;
 };
+
+export type Tab = {
+    id: string;
+    name: string;
+};
