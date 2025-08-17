@@ -29,5 +29,8 @@
         <ContextMenu.Item onClick={() => tabsContext.setSelectedTab(tab.id)}>
             <span>Select</span>
         </ContextMenu.Item>
+        <ContextMenu.Item onClick={() => tabsContext.deleteTab(tab.id)}>
+            <span class="text-red-600">Delete</span>
+        </ContextMenu.Item>
     {/snippet}
 </ContextMenu.Root>
