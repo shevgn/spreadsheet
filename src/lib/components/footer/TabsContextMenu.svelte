@@ -42,6 +42,7 @@
         {:else}
             <button
                 type="button"
+                aria-label="Select tab"
                 class={[
                     'p-2 select-none hover:bg-zinc-100',
                     tabsContext.isSelected(tab.id)
