@@ -17,7 +17,7 @@
     class="flex min-h-16 flex-1 items-center justify-between bg-white px-8 py-2"
     bind:clientHeight={elHeight}
 >
-    <section class="flex items-center space-x-4">
+    <section class="flex w-full items-center space-x-4">
         <h3>Tabs</h3>
 
         <button
@@ -28,7 +28,7 @@
             <span class="sr-only">Add Tab</span>
             <Plus size="20" />
         </button>
-        <ol class="flex items-center space-x-4">
+        <ol class="scrollbar flex w-1/2 items-center space-x-4 overflow-x-auto">
             {#each tabsContext.getTabs() as tab (tab.id)}
                 <li
                     transition:fade={{ duration: 300 }}
@@ -43,5 +43,5 @@
             {/each}
         </ol>
     </section>
-    <!--<p>&copy; 2025 Levchenko Artem</p>-->
+    <p class="text-nowrap">&copy; 2025 Levchenko Artem</p>
 </footer>
