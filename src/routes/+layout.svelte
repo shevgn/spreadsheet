@@ -1,12 +1,13 @@
 <script lang="ts">
     import '../app.css';
-    import { onMount } from 'svelte';
     import type { Cell } from '$lib/types';
-    import Header from '$lib/components/Header.svelte';
     import { createTabsContext } from '$lib/TabsContext.svelte';
-    import { createSheetContext } from '$lib/SheetContext.svelte';
     import Footer from '$lib/components/footer/Footer.svelte';
     import { contextMenuContext } from '$lib/components/contextMenu';
+    import { createSheetContext } from '$lib/components/sheet/SheetContext.svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import Header from '$lib/components/header/Header.svelte';
+    import { browser } from '$app/environment';
 
     let { children } = $props();
 
@@ -69,21 +70,31 @@
     contextMenuContext.create();
 
     let mainEl = $state<HTMLElement | null>(null);
-    let rootHeight = $state(0);
     let headerHeight = $state(0);
     let footerHeight = $state(0);
 
-    onMount(() => {
+    function resizeLayout() {
         if (!mainEl) return;
 
-        mainEl.style.height = `${rootHeight - headerHeight - footerHeight}px`;
+        const { innerHeight } = window;
+
+        mainEl.style.height = `${innerHeight - headerHeight - footerHeight}px`;
+    }
+
+    onMount(() => {
+        resizeLayout();
+
+        if (!browser) return;
+        window.addEventListener('resize', resizeLayout);
+    });
+
+    onDestroy(() => {
+        if (!browser) return;
+        window.removeEventListener('resize', resizeLayout);
     });
 </script>
 
-<div
-    class="relative flex h-screen flex-col overflow-hidden"
-    bind:clientHeight={rootHeight}
->
+<div class="relative flex h-screen flex-col overflow-hidden">
     <Header bind:elHeight={headerHeight} />
 
     <main
