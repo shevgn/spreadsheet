@@ -5,11 +5,9 @@
     type Props = {
         col: number;
         row: number;
-        selected?: boolean;
-        selectCell: (row: number, col: number) => void;
     };
 
-    let { col, row, selected, selectCell }: Props = $props();
+    let { col, row }: Props = $props();
 
     const DEFAULT_HEIGHT = 30;
 
@@ -66,14 +64,17 @@
     class={[
         'relative border text-sm',
         !isHeader ? 'border-zinc-300' : 'border-zinc-800',
-        selected && '!border-blue-500'
+        sheetContext.isCellSelected(row, col) && '!border-blue-500'
     ]}
-    class:border-2={selected}
+    class:border-2={sheetContext.isCellSelected(row, col)}
     onclick={() => {
         if (row === 0 && col === 0) {
             return;
         }
-        selectCell(row, col);
+        sheetContext.selectCell(row, col);
+    }}
+    oncontextmenu={(e) => {
+        sheetContext.selectCell(row, col);
     }}
     ondblclick={() => {
         isEditing = true;
@@ -93,10 +94,13 @@
             id={'cell-' + row + '-' + col + '-resize-right-handle'}
             role="slider"
             aria-valuenow={width}
+            aria-label="Resize column"
             tabindex="-1"
             class="absolute top-0 right-0 bottom-0 w-2 cursor-col-resize hover:bg-green-400"
             onmousedown={startResize}
-        ></div>
+        >
+            <span class="sr-only">Resize column</span>
+        </div>
     {/if}
     <div class="flex h-full w-full items-center justify-center">
         {#if isAlphabetHeader}
@@ -113,7 +117,10 @@
             {#if isEditing}
                 {@render input()}
             {:else}
-                <p class="w-full text-center">
+                <p
+                    id={`cell-${row}-${col}-value`}
+                    class="w-full text-center"
+                >
                     {sheetContext.cells[row - 1]?.[col - 1]?.value ?? ''}
                 </p>
             {/if}
