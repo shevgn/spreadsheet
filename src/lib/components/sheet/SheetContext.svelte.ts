@@ -2,39 +2,70 @@ import { getContext, setContext } from 'svelte';
 import { browser } from '$app/environment';
 import type { Cell } from '$lib/types';
 
+export const MIN_COLS = 26;
+export const MIN_ROWS = 30;
+
 class SheetContext {
     cells: Cell[][] = $state([]);
-    columnWidths: number[] = $state([]); // Store column widths
+    columnWidths: number[] = $state([]);
+
+    private selectedCell = $state<{ row: number; col: number } | null>(null);
     private readonly localStorageKey = 'sheet-cells';
     private readonly localStorageColumnWidthsKey = 'sheet-column-widths';
+
     readonly defaultColumnWidth = 80;
     readonly minColumnWidth = 50;
     readonly maxColumnWidth = 200;
+    readonly MIN_COLS = MIN_COLS;
+    readonly MIN_ROWS = MIN_ROWS;
+    readonly MAX_COLS = this.MIN_COLS * 2;
 
     constructor(cells: Cell[][]) {
         this.cells = cells;
         // Initialize column widths with default values
         // We'll determine the number of columns based on the initial cells data
-        const maxCols = cells.reduce(
-            (acc, row) => Math.max(acc, row.length),
-            0
+
+        this.columnWidths = Array(this.countColumns()).fill(
+            this.defaultColumnWidth
         );
-        this.columnWidths = Array(maxCols).fill(this.defaultColumnWidth);
+    }
+
+    getCells() {
+        return this.cells;
+    }
+    getSelectedCell() {
+        return this.selectedCell;
+    }
+
+    selectCell(row: number, col: number) {
+        this.selectedCell = { row, col };
+    }
+
+    isCellSelected(row: number, col: number) {
+        return this.selectedCell?.row === row && this.selectedCell?.col === col;
     }
 
     addRow() {
-        this.cells.push([]);
+        const start = Math.max(this.cells.length, this.MIN_ROWS);
+
+        this.cells[start] = [];
+
+        this.cells[start] = Array(this.countColumns()).fill({
+            value: '',
+            bgColor: '',
+            color: ''
+        });
 
         this.saveToLocalStorage();
     }
 
     addColumn() {
+        if (this.countColumns() >= this.MAX_COLS) return;
+
         this.cells.forEach((row) => {
-            row.push({
-                value: '',
-                bgColor: '',
-                color: ''
-            });
+            const start = Math.max(row.length, this.MIN_COLS);
+
+            row[start] = { value: '', bgColor: '', color: '' };
         });
         // Add a new column width entry
         this.columnWidths.push(this.defaultColumnWidth);
@@ -42,9 +73,24 @@ class SheetContext {
         this.saveToLocalStorage();
     }
 
+    deleteColumn(col: number) {
+        this.cells.forEach((row) => {
+            row.splice(col, 1);
+        });
+
+        this.saveToLocalStorage();
+    }
+
     addCell(row: number, col: number) {
         if (this.cells[row] === null || this.cells[row] === undefined) {
             this.cells[row] = [];
+        }
+
+        if (
+            this.cells[row][col] !== null ||
+            this.cells[row][col] !== undefined
+        ) {
+            return;
         }
 
         this.cells[row][col] = {
@@ -75,8 +121,8 @@ class SheetContext {
 
     countColumns() {
         return this.cells.reduce(
-            (acc, row) => Math.max(acc, row?.length ?? 26),
-            0
+            (acc, row) => Math.max(acc, row?.length ?? this.MIN_COLS),
+            this.MIN_COLS
         );
     }
 
@@ -105,6 +151,7 @@ class SheetContext {
         this.columnWidths = Array(this.countColumns()).fill(
             this.maxColumnWidth
         );
+
         this.saveToLocalStorage();
     }
 
@@ -142,6 +189,16 @@ class SheetContext {
 const SheetContextKey = Symbol('SheetContext');
 
 export function createSheetContext(cells?: Cell[][]) {
+    if (cells === undefined) {
+        cells = Array(MIN_ROWS).fill(
+            Array(MIN_COLS).fill({
+                value: '',
+                bgColor: '',
+                color: ''
+            })
+        );
+    }
+
     const sheetContext = new SheetContext(cells ?? []);
     if (browser) {
         sheetContext.loadFromLocalStorage();
