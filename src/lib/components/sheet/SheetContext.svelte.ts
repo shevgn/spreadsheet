@@ -1,13 +1,15 @@
 import { getContext, setContext } from 'svelte';
-import type { Cell } from './types';
 import { browser } from '$app/environment';
+import type { Cell } from '$lib/types';
 
 class SheetContext {
     cells: Cell[][] = $state([]);
     columnWidths: number[] = $state([]); // Store column widths
     private readonly localStorageKey = 'sheet-cells';
     private readonly localStorageColumnWidthsKey = 'sheet-column-widths';
-    private readonly defaultColumnWidth = 80;
+    readonly defaultColumnWidth = 80;
+    readonly minColumnWidth = 50;
+    readonly maxColumnWidth = 200;
 
     constructor(cells: Cell[][]) {
         this.cells = cells;
@@ -71,12 +73,38 @@ class SheetContext {
         return this.cells[row][col];
     }
 
+    countColumns() {
+        return this.cells.reduce(
+            (acc, row) => Math.max(acc, row?.length ?? 26),
+            0
+        );
+    }
+
     getColumnWidth(colIndex: number): number {
         return this.columnWidths[colIndex] ?? this.defaultColumnWidth;
     }
 
     setColumnWidth(colIndex: number, width: number) {
         this.columnWidths[colIndex] = width;
+        this.saveToLocalStorage();
+    }
+
+    resetColumnsWidths() {
+        this.columnWidths = [];
+        this.saveToLocalStorage();
+    }
+
+    minimizeColumnsWidths() {
+        this.columnWidths = Array(this.countColumns()).fill(
+            this.minColumnWidth
+        );
+        this.saveToLocalStorage();
+    }
+
+    maximizeColumnsWidths() {
+        this.columnWidths = Array(this.countColumns()).fill(
+            this.maxColumnWidth
+        );
         this.saveToLocalStorage();
     }
 

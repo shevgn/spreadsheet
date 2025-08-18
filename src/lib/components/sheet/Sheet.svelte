@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getSheetContext } from '$lib/SheetContext.svelte';
     import SheetCell from './SheetCell.svelte';
+    import { getSheetContext } from './SheetContext.svelte';
 
     let sheetContext = getSheetContext();
 

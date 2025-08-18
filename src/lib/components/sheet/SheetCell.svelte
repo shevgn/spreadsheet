@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getSheetContext } from '$lib/SheetContext.svelte';
     import { numberToAlphabet } from '$lib/utils';
+    import { getSheetContext } from './SheetContext.svelte';
 
     type Props = {
         col: number;
@@ -36,9 +36,9 @@
         const doResize = (moveEvent: MouseEvent) => {
             if (!isResizing) return;
             const newWidth = Math.max(
-                50,
+                sheetContext.minColumnWidth,
                 startWidth + (moveEvent.clientX - startX)
-            ); // Minimum width of 50px
+            );
 
             sheetContext.setColumnWidth(col - 1, newWidth);
             const cellElement = document.getElementById(`cell-${row}-${col}`);

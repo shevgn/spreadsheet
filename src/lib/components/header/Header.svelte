@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
-    import SaveChanges from './header/SaveChanges.svelte';
-    import NotSavedIndicator from './header/NotSavedIndicator.svelte';
+    import NotSavedIndicator from '$lib/components/header/NotSavedIndicator.svelte';
+    import SaveChanges from '$lib/components/header/SaveChanges.svelte';
 
     type Props = {
         elHeight: number;
