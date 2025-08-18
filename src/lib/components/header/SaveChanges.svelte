@@ -11,7 +11,7 @@
 
 <button
     type="button"
-    class="inline-flex items-center gap-2 rounded-md border-2 border-green-100 px-4 py-1 hover:bg-green-100 not-disabled:active:scale-95 disabled:opacity-60"
+    class="inline-flex items-center gap-2 rounded-md border-2 border-green-100 bg-white px-4 py-1 hover:bg-green-100 not-disabled:active:scale-95 disabled:opacity-60"
     onclick={saveChanges}
     disabled={isSaving || isSaved}
     aria-busy={isSaving}
