@@ -50,7 +50,7 @@
                 ]}
                 onclick={() => tabsContext.setSelectedTab(tab.id)}
             >
-                <span>{tab.name}</span>
+                <span class="text-nowrap">{tab.name}</span>
             </button>
         {/if}
     {/snippet}
