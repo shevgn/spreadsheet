@@ -75,7 +75,7 @@ class SheetContext {
 
     deleteColumn(col: number) {
         this.cells.forEach((row) => {
-            row.splice(col, 1);
+            row.splice(col - 1, 1);
         });
 
         this.saveToLocalStorage();
