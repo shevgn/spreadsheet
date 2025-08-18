@@ -4,26 +4,22 @@
 
     let sheetContext = getSheetContext();
 
-    const MIN_COLS = 26;
-    const MIN_ROWS = 30;
-
     let rowsCount = $derived(
-        sheetContext.cells.length > MIN_ROWS
-            ? sheetContext.cells.length
-            : MIN_ROWS
+        sheetContext.getCells().length > sheetContext.MIN_ROWS
+            ? sheetContext.getCells().length
+            : sheetContext.MIN_ROWS
     );
     let maxCols = $derived.by(() => {
         return sheetContext.cells.reduce(
-            (acc, row) => Math.max(acc, row?.length ?? MIN_COLS, MIN_COLS),
+            (acc, row) =>
+                Math.max(
+                    acc,
+                    row?.length ?? sheetContext.MIN_COLS,
+                    sheetContext.MIN_COLS
+                ),
             0
         );
     });
-
-    let selectedCell = $state<{ row: number; col: number } | null>(null);
-
-    const selectCell = (row: number, col: number) => {
-        selectedCell = { row, col };
-    };
 </script>
 
 <div class="h-full w-full max-w-screen overflow-scroll">
@@ -35,9 +31,6 @@
                         <SheetCell
                             {col}
                             {row}
-                            selected={selectedCell?.row === row &&
-                                selectedCell?.col === col}
-                            {selectCell}
                         />
                     {/each}
                 </tr>
