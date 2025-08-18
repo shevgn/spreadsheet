@@ -11,7 +11,7 @@
 
 <button
     type="button"
-    class="cursor-pointer rounded-full p-2 not-disabled:hover:scale-105 not-disabled:hover:bg-white"
+    class="group relative inline-flex cursor-pointer rounded-full p-1 not-disabled:hover:scale-105 not-disabled:hover:bg-white md:p-2"
     onclick={onClick}
 >
     {@render children?.()}
