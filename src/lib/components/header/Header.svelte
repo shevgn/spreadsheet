@@ -2,6 +2,7 @@
     import { onDestroy, onMount } from 'svelte';
     import NotSavedIndicator from '$lib/components/header/NotSavedIndicator.svelte';
     import SaveChanges from '$lib/components/header/SaveChanges.svelte';
+    import { UserRound } from '@lucide/svelte';
 
     type Props = {
         elHeight: number;
@@ -65,7 +66,7 @@
 </script>
 
 <header
-    class="flex min-h-16 flex-1 items-center justify-between bg-white px-8 py-2"
+    class="flex min-h-16 flex-1 items-center justify-between bg-white px-2 py-2 md:px-8"
     bind:clientHeight={elHeight}
 >
     <h1 class="sr-only text-xl font-bold">Spreadsheet</h1>
@@ -93,8 +94,11 @@
         </div>
     </section>
 
-    <div>
-        <span>User: </span>
-        <span>Artem Levchenko</span>
-    </div>
+    <button
+        type="button"
+        class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 not-disabled:hover:bg-zinc-100 md:py-1 [&_svg]:pointer-events-none"
+    >
+        <UserRound class="size-4 md:size-5" />
+        <span class="sr-only md:not-sr-only">levchenko</span>
+    </button>
 </header>

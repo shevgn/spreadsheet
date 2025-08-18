@@ -14,7 +14,7 @@
 </script>
 
 <footer
-    class="flex min-h-16 flex-1 items-center justify-between bg-white px-8 py-2"
+    class="flex min-h-16 flex-1 items-center justify-between space-x-4 bg-white px-2 py-2 md:px-8"
     bind:clientHeight={elHeight}
 >
     <section class="flex w-full items-center space-x-4">
@@ -28,7 +28,7 @@
             <span class="sr-only">Add Tab</span>
             <Plus size="20" />
         </button>
-        <ol class="scrollbar flex w-1/2 items-center space-x-4 overflow-x-auto">
+        <ol class="scrollbar flex w-2/3 items-center space-x-4 overflow-x-auto">
             {#each tabsContext.getTabs() as tab (tab.id)}
                 <li
                     transition:fade={{ duration: 300 }}
