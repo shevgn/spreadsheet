@@ -154,7 +154,7 @@
 
 <div
     aria-label="Menu Trigger"
-    role="menu"
+    role="button"
     tabindex="-1"
     oncontextmenu={onContext}
 >
