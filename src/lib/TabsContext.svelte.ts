@@ -1,6 +1,8 @@
 import { getContext, setContext } from 'svelte';
 import type { Tab } from './types';
 
+const MAX_TABS = 5;
+
 class TabsContext {
     private tabs: Tab[] = $state([]);
     private selectedTabId = $state<string>();
@@ -27,6 +29,7 @@ class TabsContext {
     }
 
     addTab() {
+        if (this.tabs.length >= MAX_TABS) return;
         this.tabs.push({
             id: crypto.randomUUID(),
             name: 'Tab ' + (this.tabs.length + 1)
