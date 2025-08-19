@@ -72,7 +72,7 @@
         </Button>
         <Button
             title="Delete column"
-            disabled={true}
+            disabled={!sheetContext.getSelectedCell()}
             onClick={() => {
                 const { col } = sheetContext.getSelectedCell() ?? {
                     col: null
