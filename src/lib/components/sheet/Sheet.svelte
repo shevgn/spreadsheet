@@ -22,19 +22,17 @@
     });
 </script>
 
-<div class="h-full w-full max-w-screen overflow-scroll">
-    <table class="h-full w-full table-fixed border-collapse">
-        <tbody class="h-full w-full">
-            {#each { length: rowsCount + 1 }, row (row)}
-                <tr class="h-full w-full">
-                    {#each { length: maxCols + 1 }, col (col)}
-                        <SheetCell
-                            {col}
-                            {row}
-                        />
-                    {/each}
-                </tr>
-            {/each}
-        </tbody>
-    </table>
-</div>
+<table class="h-full w-full table-fixed border-collapse">
+    <tbody class="h-full w-full">
+        {#each { length: rowsCount + 1 }, row (row)}
+            <tr class="h-full w-full">
+                {#each { length: maxCols + 1 }, col (col)}
+                    <SheetCell
+                        {col}
+                        {row}
+                    />
+                {/each}
+            </tr>
+        {/each}
+    </tbody>
+</table>
