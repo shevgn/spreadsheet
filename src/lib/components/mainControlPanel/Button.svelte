@@ -1,17 +1,19 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLButtonAttributes } from 'svelte/elements';
 
     type Props = {
         onClick?: () => void;
         children?: Snippet;
-    };
+    } & HTMLButtonAttributes;
 
-    let { onClick, children }: Props = $props();
+    let { onClick, children, ...rest }: Props = $props();
 </script>
 
 <button
+    {...rest}
     type="button"
-    class="group relative inline-flex cursor-pointer rounded-full p-1 not-disabled:hover:scale-105 not-disabled:hover:bg-white md:p-2"
+    class="not-disabled:group relative inline-flex cursor-pointer rounded-full p-1 not-disabled:hover:scale-105 not-disabled:hover:bg-white disabled:cursor-not-allowed md:p-2"
     onclick={onClick}
 >
     {@render children?.()}
