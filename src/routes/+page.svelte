@@ -1,9 +1,6 @@
 <script lang="ts">
     import ControlPanel from '$lib/components/mainControlPanel/ControlPanel.svelte';
     import Sheet from '$lib/components/sheet/Sheet.svelte';
-    import { getSheetContext } from '$lib/components/sheet/SheetContext.svelte';
-
-    let sheetContext = getSheetContext();
 </script>
 
 <svelte:head>
