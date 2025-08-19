@@ -6,7 +6,7 @@
     {#each locales as locale (locale)}
         <button
             disabled={locale === getLocale()}
-            class="relative inline-flex rounded-md bg-white px-4 py-1 not-disabled:cursor-pointer not-disabled:hover:bg-zinc-100 disabled:opacity-50"
+            class="relative inline-flex rounded-md border-2 border-transparent bg-white px-4 py-1 not-disabled:cursor-pointer not-disabled:hover:bg-zinc-100 disabled:opacity-50"
             onclick={() => setLocale(locale)}
         >
             {#if locale === getLocale()}

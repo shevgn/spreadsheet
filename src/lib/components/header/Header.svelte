@@ -99,7 +99,7 @@
 
     <button
         type="button"
-        class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 not-disabled:hover:bg-zinc-100 md:py-1 [&_svg]:pointer-events-none"
+        class="flex cursor-pointer items-center gap-2 rounded-md border-2 border-transparent px-2 py-2 not-disabled:hover:bg-zinc-100 md:py-1 [&_svg]:pointer-events-none"
     >
         <UserRound class="size-4 md:size-5" />
         <span class="sr-only md:not-sr-only">levchenko</span>
