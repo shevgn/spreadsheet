@@ -3,6 +3,7 @@
     import NotSavedIndicator from '$lib/components/header/NotSavedIndicator.svelte';
     import SaveChanges from '$lib/components/header/SaveChanges.svelte';
     import { UserRound } from '@lucide/svelte';
+    import Language from './Language.svelte';
 
     type Props = {
         elHeight: number;
@@ -93,6 +94,8 @@
             {/if}
         </div>
     </section>
+
+    <Language />
 
     <button
         type="button"
