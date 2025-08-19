@@ -1,4 +1,10 @@
 {
-	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from ua!"
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "status_indicator": "Не збережено",
+    "status_button_title": "Зберегти",
+    "status_button_clicked": "Збережено",
+    "status_button_saving": "Збереження…",
+    "status_time_ago": "{time} тому",
+
+    "hello_world": "Привіт, {name} з ua!"
 }

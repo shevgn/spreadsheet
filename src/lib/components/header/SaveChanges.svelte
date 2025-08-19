@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { m } from '$lib/paraglide/messages';
     import { Check } from '@lucide/svelte';
     type Props = {
         isSaved: boolean;
@@ -39,14 +40,14 @@
                 stroke-linecap="round"
             ></path>
         </svg>
-        <span>Saving…</span>
+        <span>{m.status_button_saving()}</span>
     {:else if isSaved}
         <Check
             size="20"
             aria-hidden={!isSaved}
         />
-        <span>Saved</span>
+        <span>{m.status_button_clicked()}</span>
     {:else}
-        <span class="font-medium">Save</span>
+        <span class="font-medium">{m.status_button_title()}</span>
     {/if}
 </button>

@@ -4,6 +4,7 @@
     import SaveChanges from '$lib/components/header/SaveChanges.svelte';
     import { UserRound } from '@lucide/svelte';
     import Language from './Language.svelte';
+    import { m } from '$lib/paraglide/messages';
 
     type Props = {
         elHeight: number;
@@ -56,13 +57,13 @@
         if (!ts) return '';
 
         const s = Math.floor((now - ts) / 1000);
-        if (s < 60) return `${s}s ago`;
+        if (s < 60) return `${s}s`;
 
         const m = Math.floor(s / 60);
-        if (m < 60) return `${m}m ago`;
+        if (m < 60) return `${m}m`;
 
         const h = Math.floor(m / 60);
-        return `${h}h ago`;
+        return `${h}h`;
     }
 </script>
 
@@ -89,7 +90,8 @@
                 <span class="text-red-600">Error: {saveError}</span>
             {:else if lastSavedAt}
                 <span title={new Date(lastSavedAt).toLocaleString()}>
-                    Saved {timeAgo(lastSavedAt)}
+                    {m.status_button_clicked()}
+                    {m.status_time_ago({ time: timeAgo(lastSavedAt) })}
                 </span>
             {/if}
         </div>
